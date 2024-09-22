@@ -1,17 +1,22 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteContact, fetchContacts } from "../../redux/contactsSlice";
+import { deleteContact, fetchContacts } from "../../redux/contactsOps";
 import Contact from "../Contact/Contact";
-import styles from "./ContactList.module.css";
-import { selectContacts } from "../../redux/contactsSlice";
+import {
+  selectContacts,
+  selectLoading,
+  selectError,
+} from "../../redux/contactsSlice";
 import { selectNameFilter } from "../../redux/filtersSlice";
+import styles from "./ContactList.module.css";
 
 export default function ContactList() {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
   const filter = useSelector(selectNameFilter);
 
-  // Завантажуємо контакти з бекенду під час першого рендеру
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
@@ -25,17 +30,21 @@ export default function ContactList() {
   };
 
   return (
-    <ul className={styles.contactList}>
-      {visibleContacts.map(contact => (
-        <li key={contact.id}>
-          <Contact
-            id={contact.id}
-            name={contact.name}
-            number={contact.number}
-            onDelete={handleDelete}
-          />
-        </li>
-      ))}
-    </ul>
+    <>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      <ul className={styles.contactList}>
+        {visibleContacts.map(contact => (
+          <li key={contact.id}>
+            <Contact
+              id={contact.id}
+              name={contact.name}
+              number={contact.number}
+              onDelete={handleDelete}
+            />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
