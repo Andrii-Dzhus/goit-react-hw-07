@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteContact } from "../../redux/contactsSlice";
+import { deleteContact, fetchContacts } from "../../redux/contactsSlice";
 import Contact from "../Contact/Contact";
 import styles from "./ContactList.module.css";
 import { selectContacts } from "../../redux/contactsSlice";
@@ -9,6 +10,11 @@ export default function ContactList() {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectNameFilter);
+
+  // Завантажуємо контакти з бекенду під час першого рендеру
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const visibleContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())

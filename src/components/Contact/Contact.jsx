@@ -1,4 +1,3 @@
-
 import css from "./Contact.module.css";
 import { IoPerson, IoCall } from "react-icons/io5";
 
