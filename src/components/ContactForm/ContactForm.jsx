@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import { addContact } from "../../redux/contactsOps";
+import { addContact } from "../../redux/contactsOps"; // Зміна імпорту на операцію
 import css from "./ContactForm.module.css";
 
 const ContactsSchema = Yup.object().shape({
@@ -10,6 +10,8 @@ const ContactsSchema = Yup.object().shape({
     .max(50, "Too Long!")
     .required("Required"),
   number: Yup.string()
+    .min(9, "Enter phone number in format 111-11-11")
+    .max(9, "Enter phone number in format 111-11-11")
     .matches(/^\d{3}-\d{2}-\d{2}$/, "Enter phone number in format 111-11-11")
     .required("Required"),
 });
@@ -17,8 +19,8 @@ const ContactsSchema = Yup.object().shape({
 export default function ContactForm() {
   const dispatch = useDispatch();
 
-  const handleSubmit = (values, actions) => {
-    dispatch(addContact(values));
+  const handleSubmit = async (values, actions) => {
+    await dispatch(addContact(values));
     actions.resetForm();
   };
 
